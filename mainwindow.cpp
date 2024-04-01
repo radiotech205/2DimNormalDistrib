@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
 
-    arrSize = 7;
+    arrSize = 8;
 
     TwoDimArrDbl = (double**)malloc(sizeof(double*) * (arrSize+1));
     for(int i = 0; i < (arrSize+1); i++)
@@ -29,12 +29,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
     OneDimArrChar = (uint8_t*)malloc((arrSize+1)*(arrSize+1));
 
-    for(int i = 0; i <= arrSize; i++)
+    int limits;
+    if(arrSize%2)
+        limits = arrSize + 1;
+    else
+        limits = arrSize;
+
+    for(int i = 0; i < limits; i++)
     {
-        for(int j = 0; j <= arrSize; j++)
+        for(int j = 0; j <limits; j++)
         {
-            OneDimArrChar[i*(arrSize+1) + j] = (uint8_t)(255.0*TwoDimArrDbl[i][j]/maxValue);
-            printf("%d ", OneDimArrChar[i*(arrSize+1) + j]);
+            OneDimArrChar[i*(limits) + j] = (uint8_t)(255.0*TwoDimArrDbl[i][j]/maxValue);
+            printf("%d ", OneDimArrChar[i*(limits) + j]);
         }
         printf("\n");
     }
@@ -72,7 +78,14 @@ void OneDimNormalDistrib(double a, double sigma, double xBegin, double xEnd, int
 {
     double xStep = (xEnd - xBegin)/((double)(arrSize));
     double x = xBegin;
-    for(int i = 0; i <= arrSize; i++)
+
+    int limits;
+    if(arrSize%2)
+        limits = arrSize + 1;
+    else
+        limits = arrSize;
+
+    for(int i = 0; i < arrSize; i++)
     {
         arr[i] = NormalDistrib(a, sigma, x);
         x += xStep;
@@ -88,10 +101,15 @@ double TwoDimNormalDistrib(double a, double sigma, double xBegin, double xEnd, i
     OneDimNormalDistrib(a, sigma, xBegin, xEnd, arrSize, arrY);
 
     double maxValue = arrX[0] * arrY[0];
+    int limits;
+    if(arrSize%2)
+        limits = arrSize + 1;
+    else
+        limits = arrSize;
 
-    for(int i = 0; i <= arrSize; i++)
+    for(int i = 0; i < arrSize; i++)
     {
-        for(int j = 0; j <= arrSize; j++)
+        for(int j = 0; j < arrSize; j++)
         {
             arr[i][j] = arrX[i] * arrY[j];
             if(arr[i][j] > maxValue)
